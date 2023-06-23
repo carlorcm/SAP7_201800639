@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  db:
+    container_name: db
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'P1SO'
+      MYSQL_ROOT_PASSWORD: 'secret'
+    ports:
+      - '33061:3306'
+    expose:
+      - '33061'
+    volumes:
+      - ./db_data:/var/lib/mysql
+
+  backend:
+    container_name: backend
+    restart: always
+    build: ./backend
+    image: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    links: 
+      - db
+    volumes:
+      - ./logs:/logs
+
+volumes:
+  db_data:
